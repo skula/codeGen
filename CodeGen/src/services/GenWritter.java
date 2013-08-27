@@ -1,5 +1,6 @@
 package services;
 
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -11,9 +12,216 @@ import models.Model;
 import models.Property;
 import models.Table;
 
-public class GenWriter {
+public class GenWritter {
+	public static void genConstants(String namespace) throws IOException{
+		PrintWriter out = new PrintWriter(new FileWriter("out/src/constants/Cnst.java"));
+		out.println("package " + namespace + ";");
+		out.println("");
+		out.println("");
+		
+		out.println("public class Cnst {");
+		out.println("	public static final int MODE_CRE = 1;");
+		out.println("	public static final int MODE_MOD = 2;");
+		out.println("}");
+		
+		out.close();
+	}
+	
+	public static void genAbstractDialog(String namespace) throws IOException{
+		PrintWriter out = new PrintWriter(new FileWriter("out/src/activities/dialogs/AbstractDialog.java"));
+		out.println("package " + namespace + ";");
+		out.println("");
+		out.println("");
+		out.println("import android.app.Dialog;");
+		out.println("import android.content.Context;");
+		out.println("import android.content.DialogInterface;");
+		out.println("import android.view.View;");
+		out.println("import android.view.Window;");
+		out.println("import android.widget.Button;");
+		out.println("");
+		out.println("public abstract class AbstractDialog extends Dialog {");
+		out.println("	protected Button btn1;");
+		out.println("	protected Button btn2;");
+		out.println("	protected Button btn3;");
+		out.println("");
+		out.println("	protected int mode;");
+		out.println("	protected int idItem;");
+		out.println("	protected DBService dbService;");
+		out.println("");
+		out.println("	public abstract void initialise();");
+		out.println("");
+		out.println("	public abstract void insert();");
+		out.println("");
+		out.println("	public abstract void update();");
+		out.println("");
+		out.println("	public abstract void delete();");
+		out.println("");
+		out.println("	public AbstractDialog(final Context context,");
+		out.println("			final MainActivity mainActivity, int mode, int idItem) {");
+		out.println("		super(context);");
+		out.println("		this.mode = mode;");
+		out.println("		this.idItem = idItem;");
+		out.println("		this.dbService = new DBService(context);");
+		out.println("		requestWindowFeature(Window.FEATURE_NO_TITLE);");
+		out.println("		initialise();");
+		out.println("		handleMode();");
+		out.println("		");
+		out.println("");
+		out.println("		btn1.setOnClickListener(new View.OnClickListener() {");
+		out.println("			public void onClick(View v) {");
+		out.println("				if (getMode() == Cnst.MODE_CRE) {");
+		out.println("					insert();");
+		out.println("					mainActivity.updateList();");
+		out.println("				} else {");
+		out.println("					handleUpdate(context, mainActivity);");
+		out.println("				}");
+		out.println("				dismiss();");
+		out.println("			}");
+		out.println("		});");
+		out.println("");
+		out.println("		btn2.setOnClickListener(new View.OnClickListener() {");
+		out.println("			public void onClick(View v) {");
+		out.println("				handleDelete(context, mainActivity);");
+		out.println("				dismiss();");
+		out.println("			}");
+		out.println("		});");
+		out.println("");
+		out.println("		btn3.setOnClickListener(new View.OnClickListener() {");
+		out.println("			public void onClick(View v) {");
+		out.println("				dismiss();");
+		out.println("			}");
+		out.println("		});");
+		out.println("	}");
+		out.println("");
+		out.println("	private void handleDelete(Context ctx, final MainActivity mainActivity) {");
+		out.println("		AlertDialog.Builder helpBuilder = new AlertDialog.Builder(ctx);");
+		out.println("		helpBuilder.setTitle(\"Confirmation\");");
+		out.println("		helpBuilder");
+		out.println("				.setMessage(\"Etes-vous sûr de vouloir supprimer cet élément ?\");");
+		out.println("		final Context tmpCtx = ctx;");
+		out.println("		helpBuilder.setPositiveButton(\"Oui\",");
+		out.println("				new DialogInterface.OnClickListener() {");
+		out.println("					public void onClick(DialogInterface dialog, int which) {");
+		out.println("						delete();");
+		out.println("						mainActivity.updateList();");
+		out.println("					}");
+		out.println("				});");
+		out.println("		helpBuilder.setNegativeButton(\"Non\",");
+		out.println("				new DialogInterface.OnClickListener() {");
+		out.println("					public void onClick(DialogInterface dialog, int which) {");
+		out.println("					}");
+		out.println("				});");
+		out.println("		AlertDialog helpDialog = helpBuilder.create();");
+		out.println("		helpDialog.show();");
+		out.println("	}");
+		out.println("");
+		out.println("	private void handleUpdate(Context ctx, final MainActivity mainActivity) {");
+		out.println("		AlertDialog.Builder helpBuilder = new AlertDialog.Builder(ctx);");
+		out.println("		helpBuilder.setTitle(\"Confirmation\");");
+		out.println("		helpBuilder");
+		out.println("				.setMessage(\"Etes-vous sûr de vouloir modifier cet élément ?\");");
+		out.println("		final Context tmpCtx = ctx;");
+		out.println("		helpBuilder.setPositiveButton(\"Oui\",");
+		out.println("				new DialogInterface.OnClickListener() {");
+		out.println("					public void onClick(DialogInterface dialog, int which) {");
+		out.println("						update();");
+		out.println("						mainActivity.updateList();");
+		out.println("					}");
+		out.println("				});");
+		out.println("		helpBuilder.setNegativeButton(\"Non\",");
+		out.println("				new DialogInterface.OnClickListener() {");
+		out.println("					public void onClick(DialogInterface dialog, int which) {");
+		out.println("					}");
+		out.println("				});");
+		out.println("		AlertDialog helpDialog = helpBuilder.create();");
+		out.println("		helpDialog.show();");
+		out.println("	}");
+		out.println("");
+		out.println("	private void handleMode() {");
+		out.println("		switch (mode) {");
+		out.println("		case Cnst.MODE_CRE:");
+		out.println("			btn1.setVisibility(View.VISIBLE);");
+		out.println("			btn1.setText(\"Créer\");");
+		out.println("			btn2.setVisibility(View.GONE);");
+		out.println("			btn3.setVisibility(View.VISIBLE);");
+		out.println("			btn3.setText(\"Annuler\");");
+		out.println("			break;");
+		out.println("		case Cnst.MODE_MOD:");
+		out.println("			btn1.setVisibility(View.VISIBLE);");
+		out.println("			btn1.setText(\"Modifier\");");
+		out.println("			btn2.setVisibility(View.VISIBLE);");
+		out.println("			btn2.setText(\"Supprimer\");");
+		out.println("			btn3.setVisibility(View.VISIBLE);");
+		out.println("			btn3.setText(\"Annuler\");");
+		out.println("			break;");
+		out.println("		default:");
+		out.println("			break;");
+		out.println("		}");
+		out.println("	}");
+		out.println("");
+		out.println("	public int getMode() {");
+		out.println("		return mode;");
+		out.println("	}");
+		out.println("}");
+		out.println("");
+		out.close();
+	}
+	
+	public static void initDirectories(){
+		File f = new File("out");
+		if(!f.exists()){
+			f.mkdir();
+		}
+		
+		f = new File("out/src");
+		if(!f.exists()){
+			f.mkdir();
+		}
+		
+		f = new File("out/src/constants");
+		if(!f.exists()){
+			f.mkdir();
+		}
+		
+		f = new File("out/src/enums");
+		if(!f.exists()){
+			f.mkdir();
+		}
+		
+		f = new File("out/src/models");
+		if(!f.exists()){
+			f.mkdir();
+		}
+		
+		f = new File("out/src/services");
+		if(!f.exists()){
+			f.mkdir();
+		}
+		
+		f = new File("out/src/activities");
+		if(!f.exists()){
+			f.mkdir();
+		}
+		
+		f = new File("out/src/activities/dialogs");
+		if(!f.exists()){
+			f.mkdir();
+		}
+		
+		f = new File("out/src/activities/adapters");
+		if(!f.exists()){
+			f.mkdir();
+		}
+		
+		f = new File("out/res");
+		if(!f.exists()){
+			f.mkdir();
+		}
+		
+	}
+	
 	public static void genActivity(Model model, String namespace) throws IOException {
-		PrintWriter out = new PrintWriter(new FileWriter(model.getName()
+		PrintWriter out = new PrintWriter(new FileWriter("out/src/activities/"+model.getName()
 				+ "Activity.java"));
 		out.println("package " + namespace + ";");
 		out.println("");
@@ -24,10 +232,10 @@ public class GenWriter {
 		out.println("	@Override");
 		out.println("	protected void onCreate(Bundle savedInstanceState) {");
 		out.println("		super.onCreate(savedInstanceState);");
-		out.println("		setContentView(R.layout.main_layout);");
+		out.println("		setContentView(R.layout."+ model.getInstanceName()+"list_layout);");
 		out.println("");
 		out.println("		this.itemList = (ListView) findViewById(R.id."
-				+ model.getInstanceName() + "_list_layout);");
+				+ model.getInstanceName() + "_list);");
 
 		out.println("		itemList.setOnItemClickListener(new OnItemClickListener() {");
 		out.println("			@Override");
@@ -36,7 +244,7 @@ public class GenWriter {
 		out.println("				");
 		out.println("			}");
 		out.println("		});");
-
+		out.println("");
 		out.println("		itemList.setOnItemLongClickListener(new OnItemLongClickListener() {");
 		out.println("			@SuppressWarnings(\"unchecked\")");
 		out.println("			@Override");
@@ -51,8 +259,8 @@ public class GenWriter {
 		out.close();
 	}
 
-	public static void genItemListLayout(Model model) throws IOException {
-		PrintWriter out = new PrintWriter(new FileWriter(
+	public static void genModelLayout(Model model) throws IOException {
+		PrintWriter out = new PrintWriter(new FileWriter("out/res/"+
 				model.getInstanceName() + "_item_layout.xml"));
 		out.println("<LinearLayout xmlns:android=\"http://schemas.android.com/apk/res/android\"");
 		out.println("	android:layout_width=\"wrap_content\"");
@@ -61,7 +269,7 @@ public class GenWriter {
 		for (Property p : model.getProperties()) {
 			out.println("	<TextView");
 			out.println("		android:id=\"@+id/" + model.getInstanceName()
-					+ "_item_" + p.getName() + "\"");
+					+ "_" + p.getName() + "\"");
 			out.println("		android:layout_width=\"wrap_content\"");
 			out.println("		android:layout_height=\"wrap_content\"/>");
 			out.println("");
@@ -72,33 +280,31 @@ public class GenWriter {
 	}
 
 	public static void genDialogLayout(Model model) throws IOException {
-		PrintWriter out = new PrintWriter(new FileWriter(
+		PrintWriter out = new PrintWriter(new FileWriter("out/res/"+
 				model.getInstanceName() + "_dial_layout.xml"));
 		out.println("<LinearLayout xmlns:android=\"http://schemas.android.com/apk/res/android\"");
 		out.println("	android:layout_width=\"wrap_content\"");
 		out.println("	android:layout_height=\"wrap_content\"");
-		out.println("	android:orientation=\"vertical\" >");
+		out.println("	android:orientation=\"vertical\">");
 
 		for (Property p : model.getProperties()) {
 			out.println("	<LinearLayout");
-			out.println("		xmlns:android=\"http://schemas.android.com/apk/res/android\"");
 			out.println("		android:layout_width=\"fill_parent\"");
 			out.println("		android:layout_height=\"wrap_content\"");
 			out.println("		android:orientation=\"horizontal\">");
 			out.println("		<TextView");
 			out.println("			android:layout_width=\"wrap_content\"");
 			out.println("			android:layout_height=\"wrap_content\"");
-			out.println("			android:text=\"" + p.getNameUpper() + "\" />");
+			out.println("			android:text=\"" + p.getNameUpper() + "\"/>");
 			out.println("		<EditText");
 			out.println("			android:id=\"@+id/" + model.getInstanceName()
 					+ "_dial_" + p.getName() + "\"");
 			out.println("			android:layout_width=\"wrap_content\"");
-			out.println("			android:layout_height=\"wrap_content\" />");
+			out.println("			android:layout_height=\"wrap_content\"/>");
 			out.println("	</LinearLayout>");
 		}
 
 		out.println("		<LinearLayout");
-		out.println("			xmlns:android=\"http://schemas.android.com/apk/res/android\"");
 		out.println("			android:layout_width=\"wrap_content\"");
 		out.println("			android:layout_height=\"wrap_content\"");
 		out.println("			android:orientation=\"horizontal\">");
@@ -107,20 +313,17 @@ public class GenWriter {
 		out.println("				android:id=\"@+id/" + model.getInstanceName()
 				+ "_dial_btn1\"");
 		out.println("				android:layout_width=\"wrap_content\"");
-		out.println("				android:layout_height=\"wrap_content\">");
-		out.println("			</Button>");
+		out.println("				android:layout_height=\"wrap_content\"/>");
 		out.println("			<Button");
 		out.println("				android:id=\"@+id/" + model.getInstanceName()
 				+ "_dial_btn2\"");
 		out.println("				android:layout_width=\"wrap_content\"");
-		out.println("				android:layout_height=\"wrap_content\">");
-		out.println("			</Button>");
+		out.println("				android:layout_height=\"wrap_content\"/>");
 		out.println("			<Button");
 		out.println("				android:id=\"@+id/" + model.getInstanceName()
 				+ "_dial_btn3\"");
 		out.println("				android:layout_width=\"wrap_content\"");
-		out.println("				android:layout_height=\"wrap_content\">");
-		out.println("			</Button>");
+		out.println("				android:layout_height=\"wrap_content\"/>");
 		out.println("		</LinearLayout>");
 
 		out.println("</LinearLayout>");
@@ -129,7 +332,7 @@ public class GenWriter {
 
 	public static void genAdapter(Model model, String packageName)
 			throws IOException {
-		PrintWriter out = new PrintWriter(new FileWriter(model.getName()
+		PrintWriter out = new PrintWriter(new FileWriter("out/src/activities/adapters/"+model.getName()
 				+ "Adapter.java"));
 		out.println("package " + packageName + ";");
 		out.println("");
@@ -141,15 +344,13 @@ public class GenWriter {
 		out.println("");
 		out.println("public class " + model.getName()
 				+ "Adapter extends ArrayAdapter<" + model.getName() + "> {");
-		out.println("	Context context;");
-		out.println("	int layoutResourceId;");
-		out.println("	" + model.getName() + " data[] = null;");
+		out.println("	private Context context;");
+		out.println("	private " + model.getName() + " data[] = null;");
 		out.println("");
 		out.println("	public " + model.getName()
 				+ "Adapter(Context context, int layoutResourceId, "
 				+ model.getName() + "[] data) {");
 		out.println("		super(context, layoutResourceId, data);");
-		out.println("		this.layoutResourceId = layoutResourceId;");
 		out.println("		this.context = context;");
 		out.println("		this.data = data;");
 		out.println("	}");
@@ -177,7 +378,7 @@ public class GenWriter {
 
 	public static void genDatabase(Database db, String packageName)
 			throws IOException {
-		PrintWriter out = new PrintWriter(new FileWriter("DBService.java"));
+		PrintWriter out = new PrintWriter(new FileWriter("out/src/services/DBService.java"));
 
 		// package
 		out.println("package " + packageName + ";");
@@ -222,13 +423,7 @@ public class GenWriter {
 
 		// methode bouchon
 		out.println("	public void bouchon() {");
-		for (Table t : db.getTables()) {
-			String fields = t.getFieldsString();
-			out.println("		database.execSQL(\"DROP TABLE IF EXISTS \" + TABLE_NAME_"
-					+ t.getName().toUpperCase() + ");");
-			out.println("		database.execSQL(\"CREATE TABLE \" + TABLE_NAME_"
-					+ t.getName().toUpperCase() + " + \"(" + fields + ")\");");
-		}
+		out.println("");
 		out.println("	}");
 		out.println("");
 
@@ -438,7 +633,7 @@ public class GenWriter {
 
 	public static void genModel(Model model, String packageName)
 			throws IOException {
-		PrintWriter out = new PrintWriter(new FileWriter(model.getName()
+		PrintWriter out = new PrintWriter(new FileWriter("out/src/models/"+model.getName()
 				+ ".java"));
 
 		// package
@@ -493,7 +688,7 @@ public class GenWriter {
 	}
 
 	public static void genEnum(Enum e, String packageName) throws IOException {
-		PrintWriter out = new PrintWriter(new FileWriter(e.getNameUpper()
+		PrintWriter out = new PrintWriter(new FileWriter("out/src/enums/"+e.getNameUpper()
 				+ ".java"));
 
 		// package
