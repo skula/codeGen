@@ -84,7 +84,9 @@ public class GenReader {
 
 		String[] ext = tab1[0].split(":");
 		model.setName(ext[0]);
-		model.setExtendClass(ext[1]);
+		if(ext.length==2){
+			model.setExtendClass(ext[1]);
+		}
 
 		// decoupé en [type1:nom1,nom2][type2:nom3,nom4]
 		for (String ppts : tab1[1].split(";")) {

@@ -15,6 +15,8 @@ public class CodeGen{
 			GenWritter.genAdapter(model, gr.getPackageRoot() + ".activities.adapters");		
 			GenWritter.genActivity(model, gr.getPackageRoot() + ".activities");
 			GenWritter.genModelLayout(model);
+			GenWritter.genModelListLayout(model);
+			GenWritter.genModelDialog(model, gr.getPackageRoot());
 			GenWritter.genDialogLayout(model);
 		}
 		GenWritter.genConstants(gr.getPackageRoot() + ".constants");
