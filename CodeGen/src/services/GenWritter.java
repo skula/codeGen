@@ -13,44 +13,54 @@ import models.Property;
 import models.Table;
 
 public class GenWritter {
-	
-	public static void genConstants(String namespace) throws IOException{
-		PrintWriter out = new PrintWriter(new FileWriter("out/src/constants/Cnst.java"));
+
+	public static void genConstants(String namespace) throws IOException {
+		PrintWriter out = new PrintWriter(new FileWriter(
+				"out/src/constants/Cnst.java"));
 		out.println("package " + namespace + ";");
 		out.println("");
 		out.println("");
-		
+
 		out.println("public class Cnst {");
 		out.println("	public static final int MODE_CRE = 1;");
 		out.println("	public static final int MODE_MOD = 2;");
 		out.println("}");
-		
+
 		out.close();
 	}
-	
-	public static void genModelDialog(Model model, String rootNamespace) throws IOException{
-		PrintWriter out = new PrintWriter(new FileWriter("out/src/activities/dialogs/"+model.getName()+"Dialog.java"));
-		out.println("package " + rootNamespace +".activities.dialogs;");
+
+	public static void genModelDialog(Model model, String rootNamespace)
+			throws IOException {
+		PrintWriter out = new PrintWriter(
+				new FileWriter("out/src/activities/dialogs/" + model.getName()
+						+ "Dialog.java"));
+		out.println("package " + rootNamespace + ".activities.dialogs;");
 		out.println("");
 		out.println("import android.content.Context;");
 		out.println("import android.widget.Button;");
 		out.println("import android.widget.EditText;");
 		out.println("");
-		out.println("import " + rootNamespace +".R;");
+		out.println("import " + rootNamespace + ".R;");
 		out.println("import " + rootNamespace + ".definitions.Cnst;");
 		out.println("");
-		out.println("public class " + model.getName() + "Dialog extends AbstractDialog {");
-		for(Property p : model.getProperties()){
+		out.println("public class " + model.getName()
+				+ "Dialog extends AbstractDialog {");
+		for (Property p : model.getProperties()) {
 			out.println("	private EditText " + p.getName() + "Txt;");
 		}
 		out.println("");
-		out.println("	public " + model.getName() + "Dialog(final Context context, final MainActivity mainActivity, int mode, int idItem) {");
+		out.println("	public "
+				+ model.getName()
+				+ "Dialog(final Context context, final MainActivity mainActivity, int mode, int idItem) {");
 		out.println("		super(context, mainActivity, mode, idItem);");
 		out.println("");
 		out.println("		if (mode == Cnst.MODE_MOD) {");
-		out.println("			" + model.getName() + " " +model.getInstanceName() + " = dbService.get" + model.getName() + "(idItem);");
-		for(Property p : model.getProperties()){
-			out.println("			" + p.getName().toLowerCase() + "Txt.setText(" + model.getInstanceName() + ".get" + p.getNameUpper() + "());");
+		out.println("			" + model.getName() + " " + model.getInstanceName()
+				+ " = dbService.get" + model.getName() + "(idItem);");
+		for (Property p : model.getProperties()) {
+			out.println("			" + p.getName().toLowerCase() + "Txt.setText("
+					+ model.getInstanceName() + ".get" + p.getNameUpper()
+					+ "());");
 		}
 		out.println("			setTitle(\"Modification de _______\");");
 		out.println("		}else{");
@@ -59,13 +69,20 @@ public class GenWritter {
 		out.println("	}");
 		out.println("");
 		out.println("	public void initialise() {");
-		out.println("		this.setContentView(R.layout." + model.getName().toLowerCase() + "_dialog_layout);");
+		out.println("		this.setContentView(R.layout."
+				+ model.getName().toLowerCase() + "_dialog_layout);");
 		out.println("		");
-		out.println("		this.btn1 = (Button) findViewById(R.id." + model.getName().toLowerCase() + "_dial_btn1);");
-		out.println("		this.btn2 = (Button) findViewById(R.id." + model.getName().toLowerCase() + "_dial_btn2);");
-		out.println("		this.btn3 = (Button) findViewById(R.id." + model.getName().toLowerCase() + "_dial_btn3);");
-		for(Property p : model.getProperties()){
-			out.println("		this." + p.getName() + "Txt = (EditText) findViewById(R.id." + model.getName().toLowerCase() + "_dial_" + p.getName() +");");
+		out.println("		this.btn1 = (Button) findViewById(R.id."
+				+ model.getName().toLowerCase() + "_dial_btn1);");
+		out.println("		this.btn2 = (Button) findViewById(R.id."
+				+ model.getName().toLowerCase() + "_dial_btn2);");
+		out.println("		this.btn3 = (Button) findViewById(R.id."
+				+ model.getName().toLowerCase() + "_dial_btn3);");
+		for (Property p : model.getProperties()) {
+			out.println("		this." + p.getName()
+					+ "Txt = (EditText) findViewById(R.id."
+					+ model.getName().toLowerCase() + "_dial_" + p.getName()
+					+ ");");
 		}
 		out.println("		");
 		out.println("	}");
@@ -84,9 +101,10 @@ public class GenWritter {
 		out.println("}");
 		out.close();
 	}
-	
-	public static void genAbstractDialog(String namespace) throws IOException{
-		PrintWriter out = new PrintWriter(new FileWriter("out/src/activities/dialogs/AbstractDialog.java"));
+
+	public static void genAbstractDialog(String namespace) throws IOException {
+		PrintWriter out = new PrintWriter(new FileWriter(
+				"out/src/activities/dialogs/AbstractDialog.java"));
 		out.println("package " + namespace + ";");
 		out.println("");
 		out.println("");
@@ -224,63 +242,64 @@ public class GenWritter {
 		out.println("");
 		out.close();
 	}
-	
-	public static void initDirectories(){
+
+	public static void initDirectories() {
 		File f = new File("out");
-		if(!f.exists()){
+		if (!f.exists()) {
 			f.mkdir();
 		}
-		
+
 		f = new File("out/src");
-		if(!f.exists()){
+		if (!f.exists()) {
 			f.mkdir();
 		}
-		
+
 		f = new File("out/src/constants");
-		if(!f.exists()){
+		if (!f.exists()) {
 			f.mkdir();
 		}
-		
+
 		f = new File("out/src/enums");
-		if(!f.exists()){
+		if (!f.exists()) {
 			f.mkdir();
 		}
-		
+
 		f = new File("out/src/models");
-		if(!f.exists()){
+		if (!f.exists()) {
 			f.mkdir();
 		}
-		
+
 		f = new File("out/src/services");
-		if(!f.exists()){
+		if (!f.exists()) {
 			f.mkdir();
 		}
-		
+
 		f = new File("out/src/activities");
-		if(!f.exists()){
+		if (!f.exists()) {
 			f.mkdir();
 		}
-		
+
 		f = new File("out/src/activities/dialogs");
-		if(!f.exists()){
+		if (!f.exists()) {
 			f.mkdir();
 		}
-		
+
 		f = new File("out/src/activities/adapters");
-		if(!f.exists()){
+		if (!f.exists()) {
 			f.mkdir();
 		}
-		
+
 		f = new File("out/res");
-		if(!f.exists()){
+		if (!f.exists()) {
 			f.mkdir();
 		}
-		
+
 	}
-	
-	public static void genActivity(Model model, String namespace) throws IOException {
-		PrintWriter out = new PrintWriter(new FileWriter("out/src/activities/"+model.getName()
-				+ "Activity.java"));
+
+	public static void genActivity(Model model, String namespace)
+			throws IOException {
+		PrintWriter out = new PrintWriter(new FileWriter("out/src/activities/"
+				+ model.getName() + "Activity.java"));
 		out.println("package " + namespace + ";");
 		out.println("");
 		out.println("public class " + model.getName()
@@ -290,7 +309,8 @@ public class GenWritter {
 		out.println("	@Override");
 		out.println("	protected void onCreate(Bundle savedInstanceState) {");
 		out.println("		super.onCreate(savedInstanceState);");
-		out.println("		setContentView(R.layout."+ model.getInstanceName()+"list_layout);");
+		out.println("		setContentView(R.layout." + model.getInstanceName()
+				+ "list_layout);");
 		out.println("");
 		out.println("		this.itemList = (ListView) findViewById(R.id."
 				+ model.getInstanceName() + "_list);");
@@ -318,16 +338,16 @@ public class GenWritter {
 	}
 
 	public static void genModelLayout(Model model) throws IOException {
-		PrintWriter out = new PrintWriter(new FileWriter("out/res/"+
-				model.getInstanceName() + "_layout.xml"));
+		PrintWriter out = new PrintWriter(new FileWriter("out/res/"
+				+ model.getInstanceName() + "_layout.xml"));
 		out.println("<LinearLayout xmlns:android=\"http://schemas.android.com/apk/res/android\"");
 		out.println("	android:layout_width=\"wrap_content\"");
 		out.println("	android:layout_height=\"wrap_content\"");
 		out.println("	android:orientation=\"vertical\" >");
 		for (Property p : model.getProperties()) {
 			out.println("	<TextView");
-			out.println("		android:id=\"@+id/" + model.getInstanceName()
-					+ "_" + p.getName() + "\"");
+			out.println("		android:id=\"@+id/" + model.getInstanceName() + "_"
+					+ p.getName() + "\"");
 			out.println("		android:layout_width=\"wrap_content\"");
 			out.println("		android:layout_height=\"wrap_content\"/>");
 			out.println("");
@@ -336,10 +356,10 @@ public class GenWritter {
 		out.println("</LinearLayout>");
 		out.close();
 	}
-	
+
 	public static void genModelListLayout(Model model) throws IOException {
-		PrintWriter out = new PrintWriter(new FileWriter("out/res/"+
-				model.getInstanceName() + "_list_layout.xml"));
+		PrintWriter out = new PrintWriter(new FileWriter("out/res/"
+				+ model.getInstanceName() + "_list_layout.xml"));
 		out.println("<LinearLayout xmlns:android=\"http://schemas.android.com/apk/res/android\"");
 		out.println("	android:layout_width=\"wrap_content\"");
 		out.println("	android:layout_height=\"wrap_content\"");
@@ -358,8 +378,8 @@ public class GenWritter {
 	}
 
 	public static void genDialogLayout(Model model) throws IOException {
-		PrintWriter out = new PrintWriter(new FileWriter("out/res/"+
-				model.getInstanceName() + "_dial_layout.xml"));
+		PrintWriter out = new PrintWriter(new FileWriter("out/res/"
+				+ model.getInstanceName() + "_dial_layout.xml"));
 		out.println("<LinearLayout xmlns:android=\"http://schemas.android.com/apk/res/android\"");
 		out.println("	android:layout_width=\"wrap_content\"");
 		out.println("	android:layout_height=\"wrap_content\"");
@@ -410,8 +430,9 @@ public class GenWritter {
 
 	public static void genAdapter(Model model, String packageName)
 			throws IOException {
-		PrintWriter out = new PrintWriter(new FileWriter("out/src/activities/adapters/"+model.getName()
-				+ "Adapter.java"));
+		PrintWriter out = new PrintWriter(new FileWriter(
+				"out/src/activities/adapters/" + model.getName()
+						+ "Adapter.java"));
 		out.println("package " + packageName + ";");
 		out.println("");
 		out.println("import android.content.Context;");
@@ -438,12 +459,15 @@ public class GenWritter {
 		out.println("		" + model.getName() + " " + model.getInstanceName()
 				+ " = data[position];");
 		out.println("		LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);");
-		out.println("		View rowView = inflater.inflate(R.layout." + model.getName().toLowerCase()+"_list_layout, parent, false);");
+		out.println("		View rowView = inflater.inflate(R.layout."
+				+ model.getName().toLowerCase()
+				+ "_list_layout, parent, false);");
 		out.println("		/*");
 		for (Property p : model.getProperties()) {
-			out.println("		TextView "
-					+ p.getName()
-					+ "TextView = (TextView) rowView.findViewById(R.id."+model.getName().toLowerCase()+"_list_"+p.getName()+");");
+			out.println("		TextView " + p.getName()
+					+ "TextView = (TextView) rowView.findViewById(R.id."
+					+ model.getName().toLowerCase() + "_list_" + p.getName()
+					+ ");");
 			out.println("		" + p.getName() + "TextView.setText("
 					+ model.getInstanceName() + ".get" + p.getNameUpper()
 					+ "());");
@@ -451,12 +475,14 @@ public class GenWritter {
 		out.println("		*/");
 		out.println("		return rowView;");
 		out.println("	}");
+		out.println("}");
 		out.close();
 	}
 
 	public static void genDatabase(Database db, String packageName)
 			throws IOException {
-		PrintWriter out = new PrintWriter(new FileWriter("out/src/services/DBService.java"));
+		PrintWriter out = new PrintWriter(new FileWriter(
+				"out/src/services/DBService.java"));
 
 		// package
 		out.println("package " + packageName + ";");
@@ -594,9 +620,12 @@ public class GenWritter {
 		out.println("	public void update" + t.getNameUpper() + "(int id, "
 				+ t.getNameUpper() + " " + t.getName() + ") {");
 		out.println("		ContentValues args = new ContentValues();");
+
 		for (Field f : t.getFields()) {
-			out.println("		args.put(\"" + f.getName() + "\", " + t.getName()
-					+ ".get" + f.getNameUpper() + "());");
+			if (!f.isPrimaryKey()) {
+				out.println("		args.put(\"" + f.getName() + "\", "
+						+ t.getName() + ".get" + f.getNameUpper() + "());");
+			}
 		}
 		out.println("		database.update(TABLE_NAME_" + t.getName().toUpperCase()
 				+ ", args, \"id=\" + id, null);");
@@ -693,7 +722,7 @@ public class GenWritter {
 					+ "(cursor.getString(" + cpt + "));");
 			cpt++;
 		}
-		out.println("					res.add(" + t.getName() + ";");
+		out.println("					res.add(" + t.getName() + ");");
 		out.println("				}catch(Exception e){");
 		out.println("					String s = e.getMessage();");
 		out.println("				}");
@@ -711,16 +740,16 @@ public class GenWritter {
 
 	public static void genModel(Model model, String packageName)
 			throws IOException {
-		PrintWriter out = new PrintWriter(new FileWriter("out/src/models/"+model.getName()
-				+ ".java"));
+		PrintWriter out = new PrintWriter(new FileWriter("out/src/models/"
+				+ model.getName() + ".java"));
 
 		// package
 		out.println("package " + packageName + ";");
 		out.println("");
 
 		// header class
-		String ext = model.getExtendClass()==null ? ""
-				: ("extends " + model.getExtendClass());
+		String ext = model.getExtendClass() == null ? "" : ("extends " + model
+				.getExtendClass());
 		out.println("public class " + model.getName() + " " + ext + " {");
 
 		// proprietes
@@ -766,8 +795,8 @@ public class GenWritter {
 	}
 
 	public static void genEnum(Enum e, String packageName) throws IOException {
-		PrintWriter out = new PrintWriter(new FileWriter("out/src/enums/"+e.getNameUpper()
-				+ ".java"));
+		PrintWriter out = new PrintWriter(new FileWriter("out/src/enums/"
+				+ e.getNameUpper() + ".java"));
 
 		// package
 		out.println("package " + packageName + ";");
